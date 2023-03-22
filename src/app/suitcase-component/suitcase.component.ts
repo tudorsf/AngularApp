@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { ViewChild, ElementRef } from '@angular/core';
 
 @Component({
     selector: 'suitcase-component',
-    templateUrl: 'suitcase.component.html'
+    templateUrl: 'suitcase.component.html',
+    styleUrls: ['./suitcase.component.css']
+
   })
 
   export class SuitcaseComponent implements OnInit {
@@ -15,7 +18,8 @@ import { OnInit } from '@angular/core';
         description: '',
         photo:""
     }
-    
+
+    isDisabled = true;
     hiddenProjectsArr: any[] = [];
     hiddenProject: any = {
         id : 0,
@@ -23,25 +27,43 @@ import { OnInit } from '@angular/core';
         client: '',
         description: ''
     }
+    
 
-    constructor(){}
+    constructor(){
+       
+    }
     ngOnInit(): void{
         const localData = localStorage.getItem('projectList');
         if(localData != null){
             this.projectsArr = JSON.parse(localData);
         }
     }
+    
+    
+    @ViewChild('myInput') myInput: ElementRef | undefined;
+
     addProject(){
         const modal = document.getElementById("projectModal");
         if(modal != null){
             modal.style.display = 'block';
         }
+        if(this.project.id == 0){
+            this.myInput!.nativeElement.value = "";
+
+        }
+        
+
         this.project = {
             id: 0,
             name: '',
             client: '',
-            description: ''
+            description: '',
+            photo: ''
         }
+        
+        
+
+
     }
 
     closeModal(){
@@ -53,7 +75,8 @@ import { OnInit } from '@angular/core';
             id: 0,
             name: '',
             client: '',
-            description: ''
+            description: '',
+            photo: ''
         }
 
     }
@@ -67,7 +90,8 @@ import { OnInit } from '@angular/core';
             id: 0,
             name: '',
             client: '',
-            description: ''
+            description: '',
+            photo: ''
             
         }
     }
@@ -106,8 +130,25 @@ import { OnInit } from '@angular/core';
      update(event: any){
         console.log(event)     
     }
-    uploadPhoto(){
+
+    uploadPhoto(event: any){
+        console.log(event.target.files[0]);  
+        const reader = new FileReader();
+        if(event.target.files[0].type == "image/jpeg"){
+            reader.readAsDataURL(event.target.files[0])
+            reader.addEventListener("load", () => {
+            this.project.photo = reader.result;
+            
+            })
+        } else {
+            event.target.value = '';
+            alert('Wrong file extension! File input is cleared.');
+        }
         
+
+    }
+    viewProj(){
+        console.log("test");
     }
   }
   

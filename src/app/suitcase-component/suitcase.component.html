@@ -1,115 +1,67 @@
-<div class="row mt-3 ms-3 me-3">
-    <div class="card">
-      <div class="card-header bg-info text-white mt-1">
-        <div class="row">
-          <div class="col">
-            <select (change)="update($event)">
-              <option>Hidden Projects</option>
-              <option *ngFor="let hidden of hiddenProjectsArr">
-                  {{hidden.name}}
-              </option>
-          </select>
+<div class="container mt-3">
+  <div class="card">
+    <div class="card-header bg-info text-white">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <div>
+            <select #mySelect (change)="showProj($event)">
+              <option value=0>Select a hidden project</option>
+              <option *ngFor="let project of getHiddenProjects()" value="{{project.id}}">{{project.name}}</option>
+            </select>
+           
           </div>
-          <div class="col">
-            <strong>Project Details</strong>
-
-          </div>
-          <div class="col">
-            <button type="button" class="btn btn-success btn-sm" style="float:right;" (click)="addProject()">Add Project </button>
-
-          </div>
+          
+          
+          
         </div>
-        
-        
-      </div>
-      <div class="card-body mt-0">
-        <div class="row">
-          <table class="table table-bordered">
-            <thead>
-              <div class="row ">
-                <div class="col">
-                  <th scope="col">Name</th>
-
-                </div>
-                <div class="col">
-                  <th scope="col">Description</th>
-
-                </div>
-                <div class="col">
-                  <th scope="col">client</th>
-
-                </div>
-                <div class="col">
-                  <th scope="col">Actions</th>
-
-                </div>
-              </div>
-            </thead>
-            <tbody>
-            
-              <tr class="bg-light" *ngFor="let project of projectsArr"> 
-                <div class="row">
-                  <div class="col">
-                    <th scope="col">{{project.name}}</th>
-
-                  </div>
-                  <div class="col">
-                    <th scope="col">{{project.description}}</th>
-
-                  </div>
-                  <div class="col">
-                    <th scope="col"><a target="_blank" href="{{project.client}}" >Go to {{project.name}}</a></th>
-
-                  </div>
-                  <div class="col">
-                    <th class="text-centre">
-                      <div class="row">
-                        <div class="col">
-
-                        </div>
-                        <div class="col">
-                          <button (click)="editProj(project)" class="btn btn-primary sm">Edit</button>
-
-                        </div>
-                        <div class="col">
-                          <button (click)="deleteProj(project.id)" class="btn btn-danger sm">Delete</button>
-
-                        </div>
-                        <div class="col">
-                          <button (click)="hideProj(project)" class="btn btn-secondary sm">Hide</button>
-
-                        </div>
-                        <div class="col">
-                          <button (click)="viewProj()" class="btn btn-warning sm">View</button>
-
-                        </div>
-                        <div class="col">
-
-                        </div>
-                      </div>
-                  </th>
-                  </div>
-                </div>
-                
-                
-              </tr>
-            
-              
-            </tbody>
-          </table>
+        <div>
+          <strong>Project Details</strong>
         </div>
-        
+        <div>
+          <button type="button" class="btn btn-success btn-sm" (click)="addProject()">Add Project</button>
+        </div>
       </div>
-     </div>
+    </div>
+    <div class="card-body">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Client</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let project of projectsArr">
+            <tr [hidden]="project.hidden">
+              <td>
+                <strong>{{project.name}}</strong>
+              </td>
+              <td>{{project.description}}</td>
+              <td><a target="_blank" href="{{project.client}}">Go to {{project.name}}</a></td>
+              <td>
+                <div class="d-flex justify-content-around">
+                  <button class="btn btn-primary btn-sm" (click)="editProj(project)">Edit</button>
+                  <button class="btn btn-danger btn-sm" (click)="deleteProj(project.id)">Delete</button>
+                  <button class="btn btn-secondary btn-sm" (click)="hideProj(project)">Hide</button>
+                  <button class="btn btn-warning btn-sm" (click)="viewProj(project)">View</button>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-    
-    
+  
     <!--modal-->
     <div  class="modal" id="projectModal">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header bg-success text-white">
-            <h6 class="modal-title">Add Student Details</h6>
+          <div  class="modal-header bg-success text-white">
+            <h6 class="modal-title">Add Project Details</h6>
             <button type="button" class="btn-close btn-sn text-white" (click)="closeModal()"></button>
           </div>
           <form #userForm="ngForm">
@@ -117,14 +69,20 @@
               <div class="row">
                 <div class="col-md-8">
                   <label class="for-label">Project Name</label>
-                  <input type="text" name="name" class="form-control" [(ngModel)]="project.name" >
-                  <label class="for-label">Project Client</label>
-                  <input type="text" name="client" class="form-control" [(ngModel)]="project.client">
-                  <label class="for-label">Project description</label>
+                  <input type="text" name="name" class="form-control" [(ngModel)]="project.name" required>
+                  <div *ngIf="userForm.invalid" class="error">
+                    <div>Name is required.</div>
+                  </div>
+                  <label class="for-label">Client Website</label>
+                  <input type="text" name="client" class="form-control" [(ngModel)]="project.client" required pattern="https?://.+">
+                  <div *ngIf="userForm.invalid" class="error">
+                    <div>A valid url is required</div>
+                  </div>
+                  <label class="for-label">Project Description</label>
                   <input type="text" name="description" class="form-control" [(ngModel)]="project.description">
                   <label class="for-label">Photo</label>
                   <input #myInput type="file" (change)="uploadPhoto($event)" name="description" class="form-control" >
-                  <!--<img *ngIf="project.id != 0" height="200" width="200" src="{{project.photo}}">-->
+                  
                 </div>
               </div>
             </div>
@@ -135,7 +93,7 @@
                     <button class="btn btn-secondary btn-sm" (click)="closeModal()">Cancel</button>
                 </div>
                 <div class="col-md-6">
-                    <button class="btn btn-success btn-sm" [disabled]="userForm.invalid" *ngIf="project.id == 0" (click)="saveProject(userForm)">Save</button>
+                    <button class="btn btn-success btn-sm" [disabled]="userForm.invalid"  *ngIf="project.id == 0" (click)="saveProject(userForm)">Save</button>
                     <button class="btn btn-success btn-sm" [disabled]="userForm.invalid" *ngIf="project.id != 0" (click)="updateProject()">Edit</button>
                 </div>
             </div>
@@ -147,9 +105,46 @@
     </div>
     
     
+    <!--view modal-->
+    <div class="modal" id="viewModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header bg-warning text-white">
+            <h5 class="modal-title"><i class="fas fa-info-circle"></i> {{project.name}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeViewModal()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+    
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-12">
+                <h6>{{ project.name }}</h6>
+                <p>{{ project.details }}</p>
+                <a target="_blank" href="{{ project.client }}">{{ project.name }}</a>
+                <p *ngIf="!project.photoSelected">No picture selected</p>
+                <img *ngIf="project.photoSelected" src="{{ project.photo }}" alt="{{ project.name }}" class="img-fluid mt-3">
+              </div>
+            </div>
+          </div>
+    
+          <div class="modal-footer">
+            <div class="row">
+              <div class="col-md-6">
+                <button class="btn btn-secondary btn-sm" (click)="closeViewModal()">Cancel</button>
+              </div>
+              <div class="col-md-6">
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
       
   </div>
  
-
+  
  
  

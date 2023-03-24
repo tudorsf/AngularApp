@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ViewChild, ElementRef } from '@angular/core';
 
+
+
+
 @Component({
     selector: 'suitcase-component',
     templateUrl: 'suitcase.component.html',
@@ -16,19 +19,15 @@ import { ViewChild, ElementRef } from '@angular/core';
         name: '',
         client: '',
         description: '',
-        photo:""
+        photo:"",
+        hidden: false,
+        photoSelected : false
+
     }
 
     isDisabled = true;
-    hiddenProjectsArr: any[] = [];
-    hiddenProject: any = {
-        id : 0,
-        name: '',
-        client: '',
-        description: ''
-    }
-    
-
+    emailError = false;
+  
     constructor(){
        
     }
@@ -41,6 +40,9 @@ import { ViewChild, ElementRef } from '@angular/core';
     
     
     @ViewChild('myInput') myInput: ElementRef | undefined;
+    @ViewChild('mySelect') mySelect: ElementRef | undefined;
+
+    
 
     addProject(){
         const modal = document.getElementById("projectModal");
@@ -58,7 +60,9 @@ import { ViewChild, ElementRef } from '@angular/core';
             name: '',
             client: '',
             description: '',
-            photo: ''
+            photo: '',
+            hidden: false
+
         }
         
         
@@ -76,22 +80,39 @@ import { ViewChild, ElementRef } from '@angular/core';
             name: '',
             client: '',
             description: '',
-            photo: ''
+            photo: '',
+            hidden: false
+
         }
 
     }
 
     saveProject(data: any){
         this.project.id = this.projectsArr.length + 1;
-        this.projectsArr.push(this.project);
-        this.closeModal();
-        localStorage.setItem('projectList', JSON.stringify(this.projectsArr));
+       
+        try {
+            this.projectsArr.push(this.project);
+
+            localStorage.setItem('projectList', JSON.stringify(this.projectsArr));
+            this.closeModal();
+          } catch (e) {
+            if (e instanceof DOMException && e.code === DOMException.QUOTA_EXCEEDED_ERR) {
+                alert('Local storage is full');
+                for(let i=0;i<this.projectsArr.length;i++){
+                    if(this.projectsArr[i].id == this.project.id){
+                        this.projectsArr.splice(i,1);
+                    }
+                }
+            } 
+          }
+        //localStorage.setItem('projectList', JSON.stringify(this.projectsArr));
         this.project = {
             id: 0,
             name: '',
             client: '',
             description: '',
-            photo: ''
+            photo: '',
+            hidden: false
             
         }
     }
@@ -121,34 +142,69 @@ import { ViewChild, ElementRef } from '@angular/core';
      }
      hideProj(project:any){
 
-        this.hiddenProject = project;
-        this.hiddenProjectsArr.push(this.hiddenProject);
-        
-        console.log(this.hiddenProjectsArr);
-        this.deleteProj(this.hiddenProject.id)
+        this.project = project;
+        this.project.hidden = true;
+        localStorage.setItem('projectList', JSON.stringify(this.projectsArr));
+        this.getHiddenProjects();
+
      }
      update(event: any){
         console.log(event)     
     }
 
     uploadPhoto(event: any){
-        console.log(event.target.files[0]);  
+        
         const reader = new FileReader();
+        const fileSize: number = event.target.files[0].size / 1024 / 1024;
         if(event.target.files[0].type == "image/jpeg"){
             reader.readAsDataURL(event.target.files[0])
             reader.addEventListener("load", () => {
             this.project.photo = reader.result;
-            
+            this.project.photoSelected = true;
             })
-        } else {
+        } else if(fileSize > 1){
+            event.target.value = '';
+            alert('File must be less than 1mb');
+        }
+         else {
             event.target.value = '';
             alert('Wrong file extension! File input is cleared.');
         }
         
 
     }
-    viewProj(){
-        console.log("test");
+    viewProj(project: any){
+        const modal = document.getElementById("viewModal");
+        if(modal != null){
+            modal.style.display = 'block';
+        }
+        this.project = project;
+    }
+    getHiddenProjects() {
+        return this.projectsArr.filter(project => project.hidden);
+    }
+    
+    showProj(event: any) {
+        
+        const selectedValue = event.target.value;
+        for(let i=0;i<this.projectsArr.length;i++){
+            if(this.projectsArr[i].id == selectedValue){
+                this.projectsArr[i].hidden = false;
+            }
+        }
+        localStorage.setItem('projectList', JSON.stringify(this.projectsArr));
+
+        
+
+
+    }
+      
+
+    closeViewModal(){
+        const modal = document.getElementById("viewModal");
+        if(modal != null){
+            modal.style.display = 'none';
+        }
     }
   }
   

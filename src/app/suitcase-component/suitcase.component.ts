@@ -13,6 +13,7 @@ import { ViewChild, ElementRef } from '@angular/core';
   })
 
   export class SuitcaseComponent implements OnInit {
+    
     projectsArr: any[] = [];
     project: any = {
         id : 0,
@@ -187,7 +188,7 @@ import { ViewChild, ElementRef } from '@angular/core';
         
 
     }
-    
+
     viewProj(project: any){
         const modal = document.getElementById("viewModal");
         if(modal != null){

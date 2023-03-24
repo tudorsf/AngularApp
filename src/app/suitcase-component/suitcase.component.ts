@@ -53,8 +53,6 @@ import { ViewChild, ElementRef } from '@angular/core';
             this.myInput!.nativeElement.value = "";
 
         }
-        
-
         this.project = {
             id: 0,
             name: '',
@@ -64,10 +62,6 @@ import { ViewChild, ElementRef } from '@angular/core';
             hidden: false
 
         }
-        
-        
-
-
     }
 
     closeModal(){
@@ -136,11 +130,9 @@ import { ViewChild, ElementRef } from '@angular/core';
 
     editProj(proj:any){
         this.addProject();
-        
         this.project = proj;
+    } 
 
-        
-     } 
      updateProject(){
         const newProj = this.projectsArr.find(m => m.id == this.project.id);
         newProj.name = this.project.name;
@@ -170,9 +162,7 @@ import { ViewChild, ElementRef } from '@angular/core';
         this.getHiddenProjects();
 
      }
-     update(event: any){
-        console.log(event)     
-    }
+     
 
     uploadPhoto(event: any){
         
@@ -203,12 +193,12 @@ import { ViewChild, ElementRef } from '@angular/core';
         }
         this.project = project;
     }
+    
     getHiddenProjects() {
         return this.projectsArr.filter(project => project.hidden);
     }
     
     showProj(event: any) {
-        
         const selectedValue = event.target.value;
         for(let i=0;i<this.projectsArr.length;i++){
             if(this.projectsArr[i].id == selectedValue){
@@ -216,13 +206,8 @@ import { ViewChild, ElementRef } from '@angular/core';
             }
         }
         localStorage.setItem('projectList', JSON.stringify(this.projectsArr));
-
-        
-
-
     }
-      
-
+   
     closeViewModal(){
         const modal = document.getElementById("viewModal");
         if(modal != null){

@@ -78,7 +78,6 @@
                   <input type="text" name="description" class="form-control" [(ngModel)]="project.description">
                   <label class="for-label">Photo</label>
                   <input #myInput type="file" (change)="uploadPhoto($event)" name="description" class="form-control" >
-                 
                 </div>
               </div>
             </div>
@@ -111,26 +110,22 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-    
           <div class="modal-body">
             <div class="row">
               <div class="col-md-12">
                 <h6>{{project.description}}</h6>
-                
                 <a target="_blank" href="{{ project.client }}">{{ project.name }}</a>
                 <p *ngIf="!project.photoSelected">No picture selected</p>
                 <img *ngIf="project.photoSelected" src="{{ project.photo }}" alt="{{ project.name }}" class="img-fluid mt-3">
               </div>
             </div>
           </div>
-    
           <div class="modal-footer">
             <div class="row">
               <div class="col-md-6">
                 <button class="btn btn-secondary btn-sm" (click)="closeViewModal()">Cancel</button>
               </div>
               <div class="col-md-6">
-                
               </div>
             </div>
           </div>

@@ -95,7 +95,6 @@ import { ViewChild, ElementRef } from '@angular/core';
            
             this.projectsArr.push(this.project);
             if(this.selectedFile){
-                console.log(this.selectedFile);
                 this.project.photo = this.selectedFile;
                 this.project.photoSelected = true;
                 this.selectedFile = "";
@@ -183,7 +182,6 @@ import { ViewChild, ElementRef } from '@angular/core';
             reader.readAsDataURL(event.target.files[0])
             reader.addEventListener("load", () => {
             this.selectedFile = reader.result;
-            //this.project.photoSelected = true;
             })
         } else if(fileSize > 1){
             event.target.value = '';

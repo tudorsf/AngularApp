@@ -26,8 +26,8 @@ import { ViewChild, ElementRef } from '@angular/core';
     }
 
     isDisabled = true;
-    emailError = false;
-  
+    selectedFile: any;
+
     constructor(){
        
     }
@@ -81,7 +81,8 @@ import { ViewChild, ElementRef } from '@angular/core';
             client: '',
             description: '',
             photo: '',
-            hidden: false
+            hidden: false,
+            photoSelected : false
 
         }
 
@@ -91,8 +92,17 @@ import { ViewChild, ElementRef } from '@angular/core';
         this.project.id = this.projectsArr.length + 1;
        
         try {
+           
             this.projectsArr.push(this.project);
+            if(this.selectedFile){
+                console.log(this.selectedFile);
+                this.project.photo = this.selectedFile;
+                this.project.photoSelected = true;
+                this.selectedFile = "";
+                this.myInput!.nativeElement.value = "";
 
+
+            }
             localStorage.setItem('projectList', JSON.stringify(this.projectsArr));
             this.closeModal();
           } catch (e) {
@@ -105,7 +115,7 @@ import { ViewChild, ElementRef } from '@angular/core';
                 }
             } 
           }
-        //localStorage.setItem('projectList', JSON.stringify(this.projectsArr));
+        
         this.project = {
             id: 0,
             name: '',
@@ -129,7 +139,7 @@ import { ViewChild, ElementRef } from '@angular/core';
         this.addProject();
         
         this.project = proj;
-        
+
         
      } 
      updateProject(){
@@ -137,6 +147,19 @@ import { ViewChild, ElementRef } from '@angular/core';
         newProj.name = this.project.name;
         newProj.description = this.project.description;
         newProj.client = this.project.client;
+        if(this.selectedFile){
+            newProj.photo = this.selectedFile;
+            newProj.photo = this.project.photo;
+            this.project.photoSelected = true;
+            this.myInput!.nativeElement.value = "";
+
+        } else {
+            this.myInput!.nativeElement.value = "";
+            newProj.photo = "";
+            this.project.photo = newProj.photo;
+        }
+        
+
         localStorage.setItem('projectList', JSON.stringify(this.projectsArr));
         this.closeModal();
      }
@@ -156,17 +179,19 @@ import { ViewChild, ElementRef } from '@angular/core';
         
         const reader = new FileReader();
         const fileSize: number = event.target.files[0].size / 1024 / 1024;
-        if(event.target.files[0].type == "image/jpeg"){
+        if(event.target.files[0].type == "image/jpeg" || event.target.files[0].type == "image/png"){
             reader.readAsDataURL(event.target.files[0])
             reader.addEventListener("load", () => {
-            this.project.photo = reader.result;
-            this.project.photoSelected = true;
+            this.selectedFile = reader.result;
+            //this.project.photoSelected = true;
             })
         } else if(fileSize > 1){
             event.target.value = '';
             alert('File must be less than 1mb');
-        }
+        } 
          else {
+            console.log(event.target.files[0].type);
+
             event.target.value = '';
             alert('Wrong file extension! File input is cleared.');
         }
@@ -206,5 +231,7 @@ import { ViewChild, ElementRef } from '@angular/core';
             modal.style.display = 'none';
         }
     }
+
+    
   }
   

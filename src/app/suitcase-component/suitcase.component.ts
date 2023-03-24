@@ -13,7 +13,7 @@ import { ViewChild, ElementRef } from '@angular/core';
   })
 
   export class SuitcaseComponent implements OnInit {
-    
+
     projectsArr: any[] = [];
     project: any = {
         id : 0,
@@ -150,6 +150,7 @@ import { ViewChild, ElementRef } from '@angular/core';
             this.myInput!.nativeElement.value = "";
             newProj.photo = "";
             this.project.photo = newProj.photo;
+            this.project.photoSelected = false;
         }
         
 

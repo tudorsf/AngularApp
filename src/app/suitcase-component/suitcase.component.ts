@@ -119,6 +119,7 @@ import { ViewChild, ElementRef } from '@angular/core';
             
         }
     }
+
     deleteProj(id:any){
         for(let i=0;i<this.projectsArr.length;i++){
             if(this.projectsArr[i].id == id){
@@ -133,7 +134,7 @@ import { ViewChild, ElementRef } from '@angular/core';
         this.project = proj;
     } 
 
-     updateProject(){
+    updateProject(){
         const newProj = this.projectsArr.find(m => m.id == this.project.id);
         newProj.name = this.project.name;
         newProj.description = this.project.description;
@@ -154,6 +155,7 @@ import { ViewChild, ElementRef } from '@angular/core';
         localStorage.setItem('projectList', JSON.stringify(this.projectsArr));
         this.closeModal();
      }
+
      hideProj(project:any){
 
         this.project = project;
@@ -163,7 +165,6 @@ import { ViewChild, ElementRef } from '@angular/core';
 
      }
      
-
     uploadPhoto(event: any){
         
         const reader = new FileReader();
@@ -186,6 +187,7 @@ import { ViewChild, ElementRef } from '@angular/core';
         
 
     }
+    
     viewProj(project: any){
         const modal = document.getElementById("viewModal");
         if(modal != null){
@@ -193,7 +195,7 @@ import { ViewChild, ElementRef } from '@angular/core';
         }
         this.project = project;
     }
-    
+
     getHiddenProjects() {
         return this.projectsArr.filter(project => project.hidden);
     }

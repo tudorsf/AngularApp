@@ -13,7 +13,7 @@ import { ViewChild, ElementRef } from '@angular/core';
   })
 
   export class SuitcaseComponent implements OnInit {
-
+    
     projectsArr: any[] = [];
     project: any = {
         id : 0,
@@ -25,7 +25,6 @@ import { ViewChild, ElementRef } from '@angular/core';
         photoSelected : false
 
     }
-
     isDisabled = true;
     selectedFile: any;
 
@@ -37,6 +36,7 @@ import { ViewChild, ElementRef } from '@angular/core';
         if(localData != null){
             this.projectsArr = JSON.parse(localData);
         }
+        
     }
     
     
@@ -66,9 +66,15 @@ import { ViewChild, ElementRef } from '@angular/core';
     }
 
     closeModal(){
+       
         const modal = document.getElementById("projectModal");
+
         if(modal != null){
           modal.style.display = 'none';
+        }
+        const localData = localStorage.getItem('projectList');
+        if(localData != null){
+            this.projectsArr = JSON.parse(localData);
         }
         this.project = {
             id: 0,
@@ -80,9 +86,11 @@ import { ViewChild, ElementRef } from '@angular/core';
             photoSelected : false
 
         }
+        
 
     }
 
+    
     saveProject(data: any){
         this.project.id = this.projectsArr.length + 1;
        
@@ -97,8 +105,12 @@ import { ViewChild, ElementRef } from '@angular/core';
 
 
             }
+
             localStorage.setItem('projectList', JSON.stringify(this.projectsArr));
+            
+
             this.closeModal();
+
           } catch (e) {
             if (e instanceof DOMException && e.code === DOMException.QUOTA_EXCEEDED_ERR) {
                 alert('Local storage is full');

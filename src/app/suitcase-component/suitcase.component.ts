@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ViewChild, ElementRef } from '@angular/core';
-
+import { Project } from './project.model';
 
 
 
@@ -14,8 +14,8 @@ import { ViewChild, ElementRef } from '@angular/core';
 
   export class SuitcaseComponent implements OnInit {
     
-    projectsArr: any[] = [];
-    project: any = {
+    projectsArr: Project[] = [];
+    project: Project = {
         id : 0,
         name: '',
         client: '',
@@ -60,8 +60,8 @@ import { ViewChild, ElementRef } from '@angular/core';
             client: '',
             description: '',
             photo: '',
-            hidden: false
-
+            hidden: false,
+            photoSelected: false
         }
     }
 
@@ -128,12 +128,13 @@ import { ViewChild, ElementRef } from '@angular/core';
             client: '',
             description: '',
             photo: '',
-            hidden: false
+            hidden: false,
+            photoSelected: false
             
         }
     }
 
-    deleteProj(id:any){
+    deleteProj(id:number){
         for(let i=0;i<this.projectsArr.length;i++){
             if(this.projectsArr[i].id == id){
                 this.projectsArr.splice(i,1);
@@ -142,26 +143,26 @@ import { ViewChild, ElementRef } from '@angular/core';
         localStorage.setItem('projectList', JSON.stringify(this.projectsArr));
     }
 
-    editProj(proj:any){
+    editProj(proj:Project){
         this.addProject();
         this.project = proj;
     } 
 
     updateProject(){
         const newProj = this.projectsArr.find(m => m.id == this.project.id);
-        newProj.name = this.project.name;
-        newProj.description = this.project.description;
-        newProj.client = this.project.client;
+        newProj!.name = this.project.name;
+        newProj!.description = this.project.description;
+        newProj!.client = this.project.client;
         if(this.selectedFile){
-            newProj.photo = this.selectedFile;
-            newProj.photo = this.project.photo;
+            newProj!.photo = this.selectedFile;
+            newProj!.photo = this.project.photo;
             this.project.photoSelected = true;
             this.myInput!.nativeElement.value = "";
 
         } else {
             this.myInput!.nativeElement.value = "";
-            newProj.photo = "";
-            this.project.photo = newProj.photo;
+            newProj!.photo = "";
+            this.project.photo = newProj!.photo;
             this.project.photoSelected = false;
         }
         
@@ -170,7 +171,7 @@ import { ViewChild, ElementRef } from '@angular/core';
         this.closeModal();
      }
 
-     hideProj(project:any){
+     hideProj(project:Project){
 
         this.project = project;
         this.project.hidden = true;

@@ -1,4 +1,4 @@
-This project is a CRUD App using Angular CLI and LocalStoraga. You can Add, Edit, Delete and hide a project. You can add a picture for a better understading of the project description and a url to the clients website. 
+This project is a CRUD App using Angular CLI and LocalStorage. You can Add, Edit, Delete and hide a project. You can add a picture for a better understading of the project description and a url to the clients website. 
 
 # ShowcasedWorks
 
